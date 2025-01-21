@@ -1,27 +1,24 @@
-## 하실 일
-### 1) 이 레포지토리를 git fork, clone
-1. 자신의 원격 레포지토리에 이 레포지토리를 원본 레포지토리로 삼아 fork해 주세요.
-2. 이후 자신의 레포지토리를 자신의 로컬 머신에 git clone해 주세요.
-3. 로컬에 필요한 페키지를 설치해 주세요.
-### 2) 설치 이후
-1. 환경 설정을 마친 후, 핵심 기능을 위주로 개발해 주세요 (카카오톡 참고)
-2. 기능이나 페이지 완성 때마다 git push후 pr을 신청해 주세요. 그래야 충돌이 덜 일어납니다.
+app/coins/mintCoin.ts의 경우
+script/automatePipeline.ts를 호출해서 코인 이름, 심볼 생성, 코인 배포를 진행하고 정보를 mongoDB에 저장합니다.
 
-## 로컬 설치 시 (git clone이후 )
-### 웬만해선 공식문서 보고 설치하는게 좋습니다!
-nextjs->tailwind->shadcn->mongodb순으로 설치해 주세요
-nextjs설치 과정에서 나오는 모든 질문에 yes라고 해주세요. 그러면 tailwind도 같이 설치될 겁니다.
-그러고 나서 shadcn ui의 installation에서 인스톨 하심 됩니다. 프론트 분들은 환경 설정은 끝입니다.
-(모든 인스톨은 공식 홈페이지의 installation페이지 들어가심 볼 수 있습니다!)
-이후 프론트엔드 꾸미시면 됩니다. 간단한 예제를 코드로 써 놨으니, 그거 보고 감 잡으셔도 좋겠네요.
-tailwind와 shadcn을 잘 쓰시면 개발 시간을 아주 많이 줄일 수 있습니다!
-현준님은 알아서 몽고디비 설치하시고 api 핵심 기능따라 개발하시면 됩니다.
-### 개발 완료하신 후엔 꾸준히 git push 부탁드립니다.
+app/pricetracker/priceTracker.ts의 경우 블록체인에서 유동성 풀 데이터를 이용해 가격 데이터를 가져옵니다. (시세 추적)
 
-## 스펙
-1. nextjs
-2. 테일윈드
-3. shadcn
-4. mongodb
-5. 여타 ai툴
-을 쓰지 않을까 합니다.
+contracts/MemeCoin.sol의 경우 ERC-20 토큰 컨트랙트로 코인 발행을 실제로 하는 컨트랙트 코드입니다. 
+
+scripts/ 
+deploycoin.ts : Memcoin 컨트랙트를 배포하고 .env파일에 배포한 컨트랙트 주소를 저장합니다.
+addLiquidity.ts : Uniswap V2라는 DEX 거래소를 이용해 유동성 풀을 생성합니다 (코인의 첫 가격 형성)
+
+automatePipeline.ts : 전체 프로세스 자동화 ( AI 데이터를 가져와서 코인을 만들고 유동성 풀을 생성)
+ deployCoin.ts, addLiquidity.ts를 호출합니다.
+
+test에 있는 MemeCoinTest.ts, addLiquidityTest.ts는 scripts 파일이 배포됐을떄 이상없는지 hardhat에서 로컬로 테스트한거라
+신경안쓰셔도 됩니다.
+
+____________________
+
+env 파일 추가
+
+SEPOLIA_RPC_URL= alchemy에서 sepolia eth 노드 주소 / https://eth-sepolia.g.alchemy.com/v2/ 이런식으로 되어있음
+PRIVATE_KEY= 메타마스크 프라이빗 키
+UNISWAP_V2_ROUTER=0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008
